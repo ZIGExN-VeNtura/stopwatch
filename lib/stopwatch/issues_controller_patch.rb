@@ -7,10 +7,12 @@ module Stopwatch
         link = +''
         if User.current.allowed_to?(:log_time, issue.project)
           t = Stopwatch::IssueTimer.new(issue: issue)
-          if t.running?
-            link << IssueLinks.new(issue).stop_timer
-          else
-            link << IssueLinks.new(issue).start_timer
+          if issue.tracker_id != 12 # Userstory
+            if t.running?
+              link << IssueLinks.new(issue).stop_timer
+            else
+              link << IssueLinks.new(issue).start_timer
+            end
           end
         end
         link.html_safe + super

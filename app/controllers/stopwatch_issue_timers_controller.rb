@@ -12,6 +12,7 @@ class StopwatchIssueTimersController < StopwatchController
     if time_entry.new_record?
       sys_default_activity = time_entry.activity
       time_entry.activity = Stopwatch.default_activity_for time_entry
+      time_entry.comments = 'Auto'
     end
 
     r = Stopwatch::StartTimer.new(time_entry).call

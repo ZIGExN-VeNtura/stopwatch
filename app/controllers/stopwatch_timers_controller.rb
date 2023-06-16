@@ -96,9 +96,11 @@ class StopwatchTimersController < StopwatchController
   end
 
   def load_todays_entries
-    @entries = time_entries.where(spent_on: User.current.today).or(
-      time_entries.where(id: User.current.running_time_entry_id)
-    ).order(created_on: :asc)
+    @entries = time_entries.where('spent_on = ? OR id = ?', User.current.today, User.current.running_time_entry_id).order(created_on: :asc)
+    # .or(
+    #   time_entries.where(id: User.current.running_time_entry_id)
+    # )
+    
   end
 
   def time_entries

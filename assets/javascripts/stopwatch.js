@@ -48,7 +48,7 @@ window.initStopwatch = function(config){
       updateSpentTime(data.time_entry_id, data.time_spent);
       window.setTimeout(function(){
         fetchCurrentTimer(highlightRunningTimer);
-      }, 60000);
+      }, 900000); // 15m
     } else {
       highlightTimer();
       updateSpentTime();
