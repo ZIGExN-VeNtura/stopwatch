@@ -9,10 +9,12 @@ module Stopwatch
             objects.one? and (issue = objects[0]).is_a?(Issue) and
             User.current.allowed_to?(:log_time, issue.project)
           t = Stopwatch::IssueTimer.new(issue: issue)
-          if t.running?
-            link << IssueLinks.new(issue).stop_timer
-          else
-            link << IssueLinks.new(issue).start_timer
+          if issue.tracker_id != 12 # Userstory
+            if t.running?
+              link << IssueLinks.new(issue).stop_timer
+            else
+              link << IssueLinks.new(issue).start_timer
+            end
           end
         end
         super + content_tag(:li, link.html_safe)

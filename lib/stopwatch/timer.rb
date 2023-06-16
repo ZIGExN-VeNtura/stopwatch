@@ -45,6 +45,12 @@ module Stopwatch
     # timestamp to either nil (stop: true) or current time.
     def update(stop: false)
       if hours = runtime_hours and entry = self.time_entry
+        # @TODO skip the update if spent time does not change
+        # return if entry.read_attribute(:hours) == runtime_hours || runtime_hours.zero?
+        if Time.now.hour >= 17 || User.current.today != entry.spent_on
+          stop = true
+        end
+
         time_entry.update_column :hours, entry.read_attribute(:hours) + hours
       end
       data[:started_at] = stop || !running? ? nil : Time.now.to_i
@@ -91,8 +97,9 @@ module Stopwatch
 
     def runtime_hours
       if start = data[:started_at]
-        runtime = Time.now.to_i - start
-        return runtime.to_f / 1.hour
+        runtime = (Time.now.to_i - start).to_f
+        runtime = runtime - (runtime % 15.minutes) # round to 15 minutes
+        return (runtime / 1.hour).round(2)
       end
     end
 
